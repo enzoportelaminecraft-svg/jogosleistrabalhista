@@ -1,0 +1,678 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Desafio do Trabalho Digno</title>
+
+<style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #102f46, #176b87);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.container {
+    background: white;
+    width: 100%;
+    max-width: 750px;
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: 0 8px 30px #0004;
+}
+
+h1 {
+    color: #123c54;
+    text-align: center;
+    font-size: 29px;
+}
+
+.subtitulo {
+    text-align: center;
+    color: #607887;
+    margin: 10px 0 25px;
+}
+
+input {
+    width: 100%;
+    padding: 15px;
+    border: 2px solid #d5e1e8;
+    border-radius: 10px;
+    font-size: 16px;
+    margin: 15px 0;
+}
+
+button {
+    width: 100%;
+    padding: 14px;
+    border: none;
+    border-radius: 10px;
+    background: #147b91;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+button:hover {
+    background: #102f46;
+}
+
+.alternativa {
+    background: #f1f6f9;
+    border: 2px solid #dce7ed;
+    color: #183247;
+    text-align: left;
+    margin: 9px 0;
+    padding: 15px;
+    font-size: 15px;
+    transition: .2s;
+}
+
+.alternativa:hover:not(:disabled) {
+    background: #e0f2f5;
+    border-color: #147b91;
+}
+
+.alternativa:disabled {
+    cursor: default;
+    opacity: 1;
+}
+
+.correta {
+    background: #d8f5df !important;
+    border-color: #269c50 !important;
+}
+
+.errada {
+    background: #ffe0e0 !important;
+    border-color: #dc4444 !important;
+}
+
+.info {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    color: #147b91;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.progresso {
+    width: 100%;
+    height: 9px;
+    background: #e5edf1;
+    border-radius: 20px;
+    margin-bottom: 25px;
+    overflow: hidden;
+}
+
+.barra {
+    height: 100%;
+    width: 0%;
+    background: #19a58d;
+    transition: .3s;
+}
+
+.tema {
+    color: #147b91;
+    font-size: 14px;
+    font-weight: bold;
+    margin-bottom: 12px;
+}
+
+.pergunta {
+    font-size: 21px;
+    color: #17384d;
+    margin-bottom: 20px;
+    line-height: 1.4;
+}
+
+.feedback {
+    padding: 13px;
+    margin-top: 15px;
+    border-radius: 10px;
+    font-weight: bold;
+    display: none;
+}
+
+#resultado {
+    text-align: center;
+}
+
+#resultado h2 {
+    color: #147b91;
+    margin-bottom: 15px;
+}
+
+.pontos {
+    font-size: 48px;
+    color: #147b91;
+    font-weight: bold;
+    margin: 20px;
+}
+
+.escondido {
+    display: none;
+}
+
+.rodape {
+    text-align: center;
+    color: #8295a0;
+    font-size: 12px;
+    margin-top: 25px;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<!-- TELA INICIAL -->
+
+<div id="inicio">
+
+<h1>🏆 DESAFIO DO TRABALHO DIGNO</h1>
+
+<p class="subtitulo">
+Teste seus conhecimentos sobre direitos trabalhistas,
+direitos humanos e o mundo do trabalho!
+</p>
+
+<h3>👤 Qual é o seu nome?</h3>
+
+<input
+type="text"
+id="nome"
+placeholder="Digite seu nome aqui..."
+maxlength="30"
+>
+
+<p style="text-align:center; color:#607887;">
+Responda às perguntas, escolha uma das cinco alternativas
+e acumule pontos!
+</p>
+
+<button onclick="iniciar()">COMEÇAR JOGO</button>
+
+</div>
+
+<!-- TELA DO JOGO -->
+
+<div id="jogo" class="escondido">
+
+<div class="info">
+<span id="jogador"></span>
+<span id="pontuacao">⭐ 0 pontos</span>
+</div>
+
+<div class="progresso">
+<div class="barra" id="barra"></div>
+</div>
+
+<div class="info">
+<span id="numero"></span>
+<span id="total"></span>
+</div>
+
+<div class="tema" id="tema"></div>
+
+<h2 class="pergunta" id="pergunta"></h2>
+
+<div id="alternativas"></div>
+
+<div class="feedback" id="feedback"></div>
+
+<button id="proximo" class="escondido" onclick="proxima()">
+PRÓXIMA PERGUNTA →
+</button>
+
+</div>
+
+<!-- RESULTADO FINAL -->
+
+<div id="resultado" class="escondido">
+
+<h1>🎉 FIM DO DESAFIO!</h1>
+
+<h2 id="mensagem"></h2>
+
+<p>Sua pontuação final foi:</p>
+
+<div class="pontos" id="finalPontos"></div>
+
+<p id="desempenho"></p>
+
+<button onclick="reiniciar()">JOGAR NOVAMENTE</button>
+
+</div>
+
+<div class="rodape">
+DESAFIO DO TRABALHO DIGNO • EDUCAÇÃO E CIDADANIA
+</div>
+
+</div>
+
+<script>
+
+const perguntas = [
+
+{
+tema: "⚖️ DIREITOS TRABALHISTAS",
+pergunta: "Qual é um direito garantido aos trabalhadores com vínculo de emprego?",
+opcoes: [
+"Trabalhar sem receber salário",
+"Receber férias remuneradas",
+"Não ter horário de descanso",
+"Trabalhar todos os dias sem folga",
+"Não receber nenhum benefício"
+],
+resposta: 1,
+explicacao: "As férias remuneradas são um direito dos trabalhadores, conforme as regras da legislação."
+},
+
+{
+tema: "⚖️ DIREITOS TRABALHISTAS",
+pergunta: "O que significa FGTS?",
+opcoes: [
+"Fundo Geral de Trabalho Social",
+"Fundo de Garantia do Tempo de Serviço",
+"Federação Geral dos Trabalhadores",
+"Fundo de Gestão Salarial",
+"Fator de Garantia Social"
+],
+resposta: 1,
+explicacao: "FGTS significa Fundo de Garantia do Tempo de Serviço."
+},
+
+{
+tema: "⚖️ DIREITOS TRABALHISTAS",
+pergunta: "Qual é a finalidade do 13º salário?",
+opcoes: [
+"Substituir as férias",
+"Ser um pagamento extra anual previsto em lei",
+"Eliminar o salário mensal",
+"Ser pago somente aos empresários",
+"Substituir o FGTS"
+],
+resposta: 1,
+explicacao: "O 13º salário é uma gratificação anual garantida aos trabalhadores que atendem aos requisitos legais."
+},
+
+{
+tema: "⚖️ DIREITOS TRABALHISTAS",
+pergunta: "Qual é o limite geral da jornada normal de trabalho previsto na Constituição?",
+opcoes: [
+"4 horas diárias e 20 semanais",
+"6 horas diárias e 30 semanais",
+"8 horas diárias e 44 semanais",
+"12 horas diárias e 70 semanais",
+"Não existe limite"
+],
+resposta: 2,
+explicacao: "A regra geral é de até 8 horas diárias e 44 semanais, observadas as exceções legais."
+},
+
+{
+tema: "🤝 DIREITOS HUMANOS",
+pergunta: "O que significa respeitar os direitos humanos no trabalho?",
+opcoes: [
+"Tratar algumas pessoas melhor que outras",
+"Permitir discriminação",
+"Garantir respeito, igualdade e dignidade",
+"Impedir os trabalhadores de se expressarem",
+"Obrigar todos a trabalhar sem descanso"
+],
+resposta: 2,
+explicacao: "Os direitos humanos garantem dignidade, igualdade e respeito a todas as pessoas."
+},
+
+{
+tema: "🤝 DIREITOS HUMANOS",
+pergunta: "Qual atitude representa discriminação no ambiente de trabalho?",
+opcoes: [
+"Respeitar as diferenças",
+"Oferecer oportunidades iguais",
+"Humilhar alguém por suas características pessoais",
+"Valorizar os profissionais",
+"Promover a inclusão"
+],
+resposta: 2,
+explicacao: "Humilhar ou tratar alguém de forma desigual por características pessoais pode configurar discriminação."
+},
+
+{
+tema: "🤝 DIREITOS HUMANOS",
+pergunta: "Qual é um exemplo de trabalho digno?",
+opcoes: [
+"Trabalhar sob ameaças",
+"Receber salário justo e ter segurança",
+"Não ter direito ao descanso",
+"Ser obrigado a aceitar humilhações",
+"Trabalhar em condições perigosas sem proteção"
+],
+resposta: 1,
+explicacao: "O trabalho digno deve oferecer remuneração justa, segurança e respeito."
+},
+
+{
+tema: "🚨 NOVAS FORMAS DE EXPLORAÇÃO",
+pergunta: "Qual problema pode acontecer com trabalhadores de aplicativos?",
+opcoes: [
+"Renda sempre garantida",
+"Ausência de qualquer dificuldade",
+"Renda instável e jornadas excessivas",
+"Férias automáticas para todos",
+"Fim de todos os custos de trabalho"
+],
+resposta: 2,
+explicacao: "Trabalhadores de aplicativos podem enfrentar instabilidade financeira e longas jornadas."
+},
+
+{
+tema: "🚨 NOVAS FORMAS DE EXPLORAÇÃO",
+pergunta: "O que caracteriza o trabalho infantil?",
+opcoes: [
+"Uma atividade educativa apropriada à idade",
+"Atividade de trabalho proibida para crianças ou adolescentes nas condições previstas em lei",
+"Brincar durante o recreio",
+"Estudar em uma escola",
+"Participar de atividades esportivas"
+],
+resposta: 1,
+explicacao: "O trabalho infantil é proibido, com regras específicas de idade e exceções legais, como a aprendizagem a partir dos 14 anos."
+},
+
+{
+tema: "🚨 NOVAS FORMAS DE EXPLORAÇÃO",
+pergunta: "O que pode ser considerado exploração no trabalho?",
+opcoes: [
+"Pagamento correto",
+"Respeito aos horários",
+"Jornadas abusivas e condições degradantes",
+"Descanso semanal",
+"Segurança no ambiente profissional"
+],
+resposta: 2,
+explicacao: "Jornadas abusivas e condições degradantes podem representar exploração e violação de direitos."
+},
+
+{
+tema: "💻 DESAFIOS ATUAIS DO TRABALHO",
+pergunta: "Como a inteligência artificial pode transformar o mercado de trabalho?",
+opcoes: [
+"Não provoca nenhuma mudança",
+"Pode automatizar tarefas e transformar profissões",
+"Acaba com todas as profissões imediatamente",
+"Impede o aprendizado",
+"Elimina a necessidade de trabalhadores em todos os setores"
+],
+resposta: 1,
+explicacao: "A inteligência artificial pode automatizar tarefas e modificar as atividades profissionais."
+},
+
+{
+tema: "💻 DESAFIOS ATUAIS DO TRABALHO",
+pergunta: "Qual é um dos principais desafios do trabalho remoto?",
+opcoes: [
+"Separar o horário de trabalho da vida pessoal",
+"Não utilizar tecnologia",
+"Acabar com todas as profissões",
+"Impedir a comunicação",
+"Eliminar a necessidade de organização"
+],
+resposta: 0,
+explicacao: "É importante estabelecer limites entre o horário profissional e o tempo pessoal."
+},
+
+{
+tema: "🛡️ PROTEÇÃO DO TRABALHADOR",
+pergunta: "O que fazer diante de uma situação de assédio no trabalho?",
+opcoes: [
+"Ignorar todos os acontecimentos",
+"Guardar registros e procurar orientação",
+"Desistir de conhecer seus direitos",
+"Compartilhar dados pessoais de todos",
+"Aceitar as humilhações"
+],
+resposta: 1,
+explicacao: "Guardar registros de forma segura e procurar orientação são medidas importantes."
+},
+
+{
+tema: "🛡️ PROTEÇÃO DO TRABALHADOR",
+pergunta: "Qual órgão atua na defesa dos direitos dos trabalhadores?",
+opcoes: [
+"Ministério Público do Trabalho",
+"Departamento de Trânsito",
+"Secretaria de Turismo",
+"Correios",
+"Instituto de Meteorologia"
+],
+resposta: 0,
+explicacao: "O Ministério Público do Trabalho atua na defesa da ordem jurídica trabalhista e dos direitos coletivos dos trabalhadores."
+},
+
+{
+tema: "🌎 TRABALHO DIGNO",
+pergunta: "Por que é importante conhecer os direitos trabalhistas?",
+opcoes: [
+"Para aceitar qualquer condição de trabalho",
+"Para evitar estudar sobre o assunto",
+"Para reconhecer direitos e identificar possíveis abusos",
+"Para deixar de respeitar os colegas",
+"Para impedir melhorias profissionais"
+],
+resposta: 2,
+explicacao: "Conhecer os direitos ajuda a identificar irregularidades e buscar proteção."
+}
+
+];
+
+let atual = 0;
+let pontos = 0;
+let nomeJogador = "";
+let respondida = false;
+
+function iniciar() {
+
+    nomeJogador = document.getElementById("nome").value.trim();
+
+    if (!nomeJogador) {
+        alert("Digite seu nome para começar!");
+        return;
+    }
+
+    atual = 0;
+    pontos = 0;
+
+    document.getElementById("inicio").classList.add("escondido");
+    document.getElementById("resultado").classList.add("escondido");
+    document.getElementById("jogo").classList.remove("escondido");
+
+    document.getElementById("jogador").textContent =
+    "👤 " + nomeJogador;
+
+    mostrarPergunta();
+}
+
+function mostrarPergunta() {
+
+    respondida = false;
+
+    const p = perguntas[atual];
+
+    document.getElementById("tema").textContent = p.tema;
+    document.getElementById("pergunta").textContent = p.pergunta;
+
+    document.getElementById("numero").textContent =
+    "Pergunta " + (atual + 1);
+
+    document.getElementById("total").textContent =
+    "Total: " + perguntas.length;
+
+    document.getElementById("pontuacao").textContent =
+    "⭐ " + pontos + " pontos";
+
+    document.getElementById("barra").style.width =
+    (atual / perguntas.length * 100) + "%";
+
+    document.getElementById("feedback").style.display = "none";
+
+    document.getElementById("proximo").classList.add("escondido");
+
+    const area = document.getElementById("alternativas");
+    area.innerHTML = "";
+
+    p.opcoes.forEach((opcao, indice) => {
+
+        const botao = document.createElement("button");
+
+        botao.className = "alternativa";
+
+        botao.textContent =
+        String.fromCharCode(65 + indice) + ") " + opcao;
+
+        botao.onclick = () => verificar(indice);
+
+        area.appendChild(botao);
+
+    });
+
+}
+
+function verificar(escolha) {
+
+    if (respondida) return;
+
+    respondida = true;
+
+    const p = perguntas[atual];
+    const botoes = document.querySelectorAll(".alternativa");
+
+    botoes.forEach((botao, indice) => {
+
+        botao.disabled = true;
+
+        if (indice === p.resposta) {
+            botao.classList.add("correta");
+        }
+
+        if (indice === escolha && escolha !== p.resposta) {
+            botao.classList.add("errada");
+        }
+
+    });
+
+    const feedback = document.getElementById("feedback");
+
+    feedback.style.display = "block";
+
+    if (escolha === p.resposta) {
+
+        pontos += 10;
+
+        feedback.style.background = "#d8f5df";
+        feedback.style.color = "#176b37";
+
+        feedback.textContent =
+        "✅ RESPOSTA CORRETA! +10 pontos. " + p.explicacao;
+
+    } else {
+
+        feedback.style.background = "#ffe0e0";
+        feedback.style.color = "#a52c2c";
+
+        feedback.textContent =
+        "❌ RESPOSTA INCORRETA! " + p.explicacao;
+
+    }
+
+    document.getElementById("pontuacao").textContent =
+    "⭐ " + pontos + " pontos";
+
+    document.getElementById("barra").style.width =
+    ((atual + 1) / perguntas.length * 100) + "%";
+
+    document.getElementById("proximo").classList.remove("escondido");
+
+    if (atual === perguntas.length - 1) {
+        document.getElementById("proximo").textContent =
+        "VER MEU RESULTADO 🏆";
+    } else {
+        document.getElementById("proximo").textContent =
+        "PRÓXIMA PERGUNTA →";
+    }
+
+}
+
+function proxima() {
+
+    if (atual < perguntas.length - 1) {
+
+        atual++;
+        mostrarPergunta();
+
+    } else {
+
+        finalizar();
+
+    }
+
+}
+
+function finalizar() {
+
+    document.getElementById("jogo").classList.add("escondido");
+    document.getElementById("resultado").classList.remove("escondido");
+
+    document.getElementById("finalPontos").textContent =
+    pontos + " / 150";
+
+    document.getElementById("mensagem").textContent =
+    "Parabéns, " + nomeJogador + "!";
+
+    let desempenho = "";
+
+    if (pontos >= 130) {
+        desempenho = "🏆 Excelente! Você conhece muito bem os direitos e o mundo do trabalho!";
+    } else if (pontos >= 100) {
+        desempenho = "🌟 Muito bem! Você demonstrou ótimos conhecimentos!";
+    } else if (pontos >= 70) {
+        desempenho = "👏 Bom trabalho! Continue aprendendo sobre seus direitos!";
+    } else {
+        desempenho = "📚 Continue estudando! Conhecer seus direitos é muito importante!";
+    }
+
+    document.getElementById("desempenho").textContent =
+    desempenho;
+
+}
+
+function reiniciar() {
+
+    document.getElementById("resultado").classList.add("escondido");
+    document.getElementById("inicio").classList.remove("escondido");
+
+    document.getElementById("nome").value = "";
+
+}
+
+</script>
+
+</body>
+</html>
